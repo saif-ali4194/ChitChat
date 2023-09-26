@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import "../../Styles/Pages/Auth/Auth.css" 
 import { useLocation, useNavigate } from 'react-router-dom';
 import PersonIcon from '@mui/icons-material/Person';
@@ -8,6 +8,8 @@ import LockResetIcon from '@mui/icons-material/LockReset';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import axios from "axios";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Auth = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -19,7 +21,21 @@ const Auth = () => {
     const [email, setEmail] = useState("");
     const [pass, setPass] = useState("");
     const [conpass, setConpass] = useState("");
+    const [disable, setDisable] = useState(true);
+    const [suc, setSuc] = useState(false);
 
+    useEffect(()=> {
+        if(suc === true) {
+        console.log("yeahhhh")
+        setName('');
+        setEmail('');
+        setPass('');
+        setConpass('');
+        setDisable(true);
+        }
+        console.log(name);
+        
+    }, [suc]);
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };
@@ -35,30 +51,89 @@ const Auth = () => {
 		setName(event.target.value);
         console.log(name);
 	};
+    function isValidEmail() {
+        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        return emailPattern.test(email);
+      }
+      
     const handleEmailChange = (event) => {
 		setEmail(event.target.value);
 	};
     const handlePassChange = (event) => {
 		setPass(event.target.value);
+
+        if(conpass === event.target.value && conpass !== "") setDisable(false);
+        else setDisable(true);
 	};
     const handleConpassChange = (event) => {
 		setConpass(event.target.value);
+
+        if(pass === event.target.value && pass !== "") setDisable(false);
+        else setDisable(true);
 	};
+
+    function is_pass_valid() {
+        const minLength = 8;
+      
+        if (pass.length < minLength) {
+          return { valid: false, msg: 'Password should be at least 8 characters long' };
+        }
+      
+        if (!/[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]/.test(pass)) {
+          return { valid: false, msg: 'Password should contain at least one special character' };
+        }
+      
+        if (!/\d/.test(pass)) {
+          return { valid: false, msg: 'Password should contain at least one digit' };
+        }
+      
+        if (!/[A-Z]/.test(pass)) {
+          return { valid: false, msg: 'Password should contain at least one capital letter' };
+        }
+      
+        return { valid: true };
+      }
+    
 
     const handleOnboarding = async (e) => {
         e.preventDefault();
-
-        try {
-            const response = await axios.post("http://localhost:4000/api/auth/signup", {
-                name: name,
-                email: email,
-                password: pass,
-            })
-    
-            if (response.status === 201) console.log("OnBoarding successful")
-        } catch(e) {
-            console.log(e);
-        }
+        const validation = is_pass_valid();
+        if(!validation.valid) {
+            toast.error(validation.msg, {
+                position: 'top-right',
+                autoClose: 3000, 
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              });
+        } else if (!isValidEmail(email)) {
+            toast.error("Please use correct email", {
+                position: 'top-right',
+                autoClose: 3000, 
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              });
+        }else {
+            try {
+                const response = await axios.post("http://localhost:4000/api/auth/signup", {
+                    name: name,
+                    email: email,
+                    password: pass,
+                })
+                if (response.status === 201) {
+                    console.log("OnBoarding successful");
+                    setSuc(true);
+                    
+                } 
+            } catch(e) {
+                console.log(e);
+            }
+        } 
     }
   return (
     <div className='auth'>
@@ -70,16 +145,16 @@ const Auth = () => {
             <form onSubmit={handleOnboarding}>
             <div className="auth-field">
                     <label htmlFor="" > <PersonIcon className='custome-icon'/>Name</label>
-                    <input type="text" onChange={handleNameChange} required/>   
+                    <input type="text" value={name} onChange={handleNameChange} required/>   
                 </div>
                 <div className="auth-field">
                     <label htmlFor=""> <EmailIcon className='custome-icon'/>Email</label>
-                    <input type="email" onChange={handleEmailChange} required/>   
+                    <input type="email" value={email} onChange={handleEmailChange} required/>   
                 </div>
                 <div className="auth-field">
                 <label htmlFor=""><KeyIcon className='custome-icon'/>Password</label>
                 <div className="pass-div">
-                <input type={showPassword ? 'text' : 'password'} onChange={handlePassChange} required/>
+                <input type={showPassword ? 'text' : 'password'} value={pass} onChange={handlePassChange} required/>
                     {showPassword ? (
                         <VisibilityOffIcon
                             className="password-toggle-icon"
@@ -96,9 +171,9 @@ const Auth = () => {
                 </div>
                 <div className="auth-field">
                 <label htmlFor=""><LockResetIcon className='custome-icon'/> Confirm Password</label>
-                <input type={showPassword ? 'text' : 'password'} onChange={handleConpassChange} required/>
+                <input type="password" value={conpass} onChange={handleConpassChange} required/>
                 </div>
-                <button type='submit'>Join</button>
+                <button type='submit' disabled={disable}>Join</button>
             </form>
             <span id="auth-change" onClick={handleChangeSignup}>Already have an account?</span>
             

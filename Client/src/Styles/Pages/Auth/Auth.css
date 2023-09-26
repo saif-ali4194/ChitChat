@@ -94,6 +94,12 @@
 .auth-signup>form>button:hover, .auth-login>form>button:hover {
     background-color: var(--brand-color-hover);
 }
+.auth-signup>form>button:disabled, .auth-login>form>button:disabled {
+    background-color: rgb(204, 204, 204);
+}
+.auth-signup>form>button:disabled:hover, .auth-login>form>button:disabled:hover {
+    background-color: rgb(204, 204, 204);
+}
 #auth-change {
     margin-top: 1rem;
     font-size: 1.1em;
