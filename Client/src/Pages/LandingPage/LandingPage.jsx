@@ -45,13 +45,7 @@ const LandingPage = () => {
 
       <div className="land-footer">
         &copy; {new Date().getFullYear()} ChitChat
-      </div>
-
-    <Routes>
-      <Route path="/signup" element={<Auth />} />
-      <Route path="/login"  element={<Auth />} />
-    </Routes>
-      
+      </div>  
     </div>
   )
 }

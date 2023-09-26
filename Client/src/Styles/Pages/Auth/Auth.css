@@ -1,0 +1,110 @@
+.auth {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.auth-hero {
+    width: 60%;
+    display: flex;
+    border-radius: 20px;
+    box-shadow: 1px 1px 10px rgb(72, 72, 72);
+    display: flex;
+    justify-content: space-between;
+}
+
+#auth-left {
+    width: 50%;
+    background-image: url("../../../Assets/net.webp");
+    background-position: center;
+    background-repeat: no-repeat;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+
+#auth-right {
+    width: 50%;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: fit-content;
+}
+
+.auth-signup, .auth-login {
+    width: 90%;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+}
+.auth-signup>h3, .auth-login>h3 {
+    margin: 2rem 0rem 0rem 0rem;
+    font-size: 2em;
+    align-self: center;
+}
+.auth-signup>form, .auth-login>form {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column; 
+    gap: 20px;
+}
+.auth-field {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.auth-field>input {
+    height: 30px;
+    font-size:1.1em;
+}
+.pass-div {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.auth-field .pass-div > input {
+    width: 98%;
+    height: 30px;
+    font-size:1.1em;
+}
+.password-toggle-icon {
+    position: absolute;
+   right: 10px;
+}
+.pass-div .password-toggle-icon {
+   font-size: 1em;
+}
+
+.auth-field>label {
+    font-size: 1.1em;
+    font-weight: 400;
+}
+
+.auth-signup>form>button, .auth-login>form>button {
+    height: 40px;
+    background-color: var(--brand-color);
+    border-style: none;
+    color: white;
+    font-size: 1.2em;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.2s ease;
+}
+.auth-signup>form>button:hover, .auth-login>form>button:hover {
+    background-color: var(--brand-color-hover);
+}
+#auth-change {
+    margin-top: 1rem;
+    font-size: 1.1em;
+    cursor:pointer; 
+    margin-bottom: 2rem;
+}
+.auth-field > label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.auth-field .custome-icon {
+    font-size: 1.1em;
+}
