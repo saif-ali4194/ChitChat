@@ -1,0 +1,49 @@
+.contacts {
+    width: 25%;
+    height: 100%;
+    background-color: var(--backgroundcolor);
+    border-right: 1px solid var(--bordercolor);
+}
+
+.contacts-title {
+    gap: 10px;
+    width: 100%;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--bordercolor);
+}
+
+.contacts-title > img {
+    height: 3rem;
+    width: 3.5rem;
+    margin-left: 20px;
+}
+.contacts-title >h1 {
+    display: block;
+    font-size: 1.6em;
+}
+.contacts-title >h1 >span {
+    color: var(--brand-color);
+}
+
+@media screen and (max-width: 960px)  {
+    .contacts-title > h1 {
+        font-size: 1em;
+    }
+    .contacts-title > img {
+        height: 2rem;
+        width: 2.5rem;
+    }
+}
+
+@media screen and (max-width: 560px)  {
+    .contacts-title > h1 {
+        display: none;
+        font-size: 1em;
+    }
+    .contacts-title > img {
+        height: 2rem;
+        width: 2.5rem;
+    }
+}

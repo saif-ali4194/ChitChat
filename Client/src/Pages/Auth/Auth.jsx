@@ -41,9 +41,11 @@ const Auth = () => {
     };
 
     function handleChangeSignup() {
+        setSuc(false);
         navigate("/login");
     }
     function handleChangeLogin() {
+        setSuc(false);
         navigate("/signup");
     }
 
@@ -125,15 +127,111 @@ const Auth = () => {
                     email: email,
                     password: pass,
                 })
+
+                console.log(response);
                 if (response.status === 201) {
                     console.log("OnBoarding successful");
                     setSuc(true);
-                    
+                    navigate("/home");
                 } 
             } catch(e) {
-                console.log(e);
+                if(e.response.status === 400) {
+                    navigate("/login");
+                    toast.error("You are already registered!", {
+                        position: 'top-right',
+                        autoClose: 3000, 
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                      })
+                } else {
+                    toast.error(e.response.error, {
+                        position: 'top-right',
+                        autoClose: 3000, 
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                      })
+                }
+                
             }
         } 
+    }
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+
+        const validation = is_pass_valid();
+        if(!validation.valid) {
+            toast.error("Incorrect Password", {
+                position: 'top-right',
+                autoClose: 3000, 
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              });
+        } else if (!isValidEmail(email)) {
+            toast.error("Please use correct email", {
+                position: 'top-right',
+                autoClose: 3000, 
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              });
+        } else {
+            try {
+                const response = await axios.post("http://localhost:4000/api/auth/login", {
+                    email: email,
+                    password: pass,
+                })
+
+                if(response.status === 200) {
+                    setSuc(true);
+                    navigate("/home");
+                } 
+            } catch(e) {
+                if(e.response.status == 401) {
+                    toast.error("Incorrect password!", {
+                        position: 'top-right',
+                        autoClose: 3000, 
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                      })
+                } else if (e.response.status == 400) {
+                    navigate("/signup");
+                    toast.error("You are not registered!", {
+                        position: 'top-right',
+                        autoClose: 3000, 
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                      })
+                } else {
+                    toast.error(e.response.error, {
+                        position: 'top-right',
+                        autoClose: 3000, 
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                      })
+                }    
+            }
+        }
     }
   return (
     <div className='auth'>
@@ -180,15 +278,15 @@ const Auth = () => {
             </div>}
         {pathname === '/login' && <div className="auth-login">
         <h3>Login</h3>
-            <form action="">
+            <form onSubmit={handleLogin}>
                 <div className="auth-field">
                     <label htmlFor=""><EmailIcon className='custome-icon'/>Email</label>
-                    <input type="email" onChange={handleEmailChange} required/>   
+                    <input type="email" value={email} onChange={handleEmailChange} required/>   
                 </div>
                 <div className="auth-field">
                 <label htmlFor=""><KeyIcon className='custome-icon'/>Password</label>
                 <div className="pass-div">
-                <input type={showPassword ? 'text' : 'password'} onChange={handlePassChange} required/>
+                <input type={showPassword ? 'text' : 'password'} value={pass} onChange={handlePassChange} required/>
                     {showPassword ? (
                         <VisibilityOffIcon
                             className="password-toggle-icon"
@@ -202,7 +300,7 @@ const Auth = () => {
                         )}
                 </div>
                 </div>
-                <button>Login</button>
+                <button type='submit'>Login</button>
             </form>
             <span id="auth-change" onClick={handleChangeLogin}>Need an account?</span>
             </div>}
